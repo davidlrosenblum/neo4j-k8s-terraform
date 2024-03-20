@@ -1,0 +1,79 @@
+image:
+  imagePullPolicy: "Always"
+  customImage: "davidlrosenblum/neo4jpoc:5.17.0-enterprise"
+
+neo4j:
+  name: "neo4jtf"
+  resources:
+    cpu: "1.500"
+    memory: "7Gi"
+  passwordFromSecret: "neo4jpwd"
+  offlineMaintenanceModeEnabled: false
+  # Uncomment to use enterprise edition
+  edition: "enterprise"
+  acceptLicenseAgreement: "yes"
+  minimumClusterSize: "3"
+
+
+# livenessProbe:
+#   failureThreshold: 20
+#   timeoutSeconds: 10
+#   periodSeconds: 5
+
+config:
+  server.backup.enabled: "true"
+  server.config.strict_validation: "false"
+  db.logs.query.enabled: "OFF"
+  gds.enterprise.license_file: "/licenses/local/gds.license"
+  dbms.bloom.license_file: "/licenses/local/bloom.license"
+  dbms.security.procedures.unrestricted: "apoc.*,bloom.*,gds.*"
+  dbms.unmanaged_extension_classes: "com.neo4j.bloom.server=/bloom"
+  dbms.security.http_auth_allowlist: "/,/browser.*,/bloom.*"
+  server.directories.plugins: "/var/lib/neo4j/plugins"
+  server.memory.heap.initial_size: "5G"
+  server.memory.heap.max_size: "5G"
+  server.memory.pagecache.size: "1500M"
+  server.directories.transaction.logs.root: /transactions
+  initial.server.mode_constraint: "PRIMARY"
+  initial.dbms.default_primaries_count: "3"
+  server.metrics.enabled: "true"
+  server.metrics.csv.interval: "30s"
+  server.metrics.csv.rotation.keep_number: "5"
+  server.metrics.csv.rotation.compression: "NONE"
+  db.tx_log.rotation.retention_policy: "1 hours"
+
+
+
+additionalVolumeMounts:
+  - name: license-keys
+    mountPath: /licenses/local
+    readOnly: true
+
+additionalVolumes:
+  - name: license-keys
+    configMap:
+      name: license-config
+
+volumes:
+  data:
+    mode: "dynamic"
+    dynamic:
+      storageClassName: "aws-gp3-xfs"
+      requests:
+        storage: 50Gi
+  # uncomment to mount your efs
+  # import:
+  #   mode: volume
+  #   volume:
+  #     setOwnerAndGroupWritableFilePermissions: true
+  #     persistentVolumeClaim:
+  #       claimName: pvc-efs-dynamic
+  # transactions:
+  #     mode: "dynamic"
+  #     dynamic:
+  #       storageClassName: "gp3highiops"
+  #       accessModes:
+  #         - ReadWriteOnce
+  #       requests:
+  #         storage: 100Gi
+    
