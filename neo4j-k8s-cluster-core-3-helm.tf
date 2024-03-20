@@ -5,7 +5,7 @@ provider "helm" {
 }
 
 resource "helm_release" "neo4j-core-3" {
-  name       = "core-1"
+  name       = "core-3"
   chart      = "neo4j/neo4j"
 
   values = [
