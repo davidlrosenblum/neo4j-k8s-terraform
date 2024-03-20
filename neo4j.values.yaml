@@ -5,8 +5,8 @@ image:
 neo4j:
   name: "neo4jtf"
   resources:
-    cpu: "1.500"
-    memory: "7Gi"
+    cpu: "1.200"
+    memory: "4Gi"
   passwordFromSecret: "neo4jpwd"
   offlineMaintenanceModeEnabled: false
   # Uncomment to use enterprise edition
@@ -33,8 +33,8 @@ config:
   dbms.unmanaged_extension_classes: "com.neo4j.bloom.server=/bloom"
   dbms.security.http_auth_allowlist: "/,/browser.*,/bloom.*"
   server.directories.plugins: "/var/lib/neo4j/plugins"
-  server.memory.heap.initial_size: "5G"
-  server.memory.heap.max_size: "5G"
+  server.memory.heap.initial_size: "1500M"
+  server.memory.heap.max_size: "1500M"
   server.memory.pagecache.size: "1500M"
   server.directories.transaction.logs.root: /transactions
   initial.server.mode_constraint: "PRIMARY"
@@ -71,12 +71,11 @@ volumes:
   #     setOwnerAndGroupWritableFilePermissions: true
   #     persistentVolumeClaim:
   #       claimName: pvc-efs-dynamic
-  # transactions:
-  #     mode: "dynamic"
-  #     dynamic:
-  #       storageClassName: "gp3highiops"
-  #       accessModes:
-  #         - ReadWriteOnce
-  #       requests:
-  #         storage: 100Gi
-    
+  transactions:
+      mode: "dynamic"
+      dynamic:
+        storageClassName: "gp3highiops"
+        accessModes:
+          - ReadWriteOnce
+        requests:
+          storage: 50Gi
