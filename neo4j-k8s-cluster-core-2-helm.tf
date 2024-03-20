@@ -5,10 +5,10 @@ provider "helm" {
 }
 
 resource "helm_release" "neo4j-core-2" {
-  name       = "core-2"
-  chart      = "neo4j/neo4j-cluster-core"
+  name       = "core-1"
+  chart      = "neo4j/neo4j"
 
   values = [
-    "${file("core-2.values.yaml")}"
+    "${file("neo4j.values.yaml")}"
   ]
 }
